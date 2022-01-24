@@ -3,8 +3,8 @@
 object main {
   def main(args: Array[String]): Unit = {
 //    getAndShowAirports()
-    getAndShowCountries()
-
+//    getAndShowCountries()
+    getAndShowRunways()
     //UI Launch
   /*
     println("Please select the corresponding number of what you want to do.\n1) Query\n2) Report")
@@ -30,5 +30,13 @@ object main {
     val countries = Parser.parseToCountry(rawCountries)
     println(countries.mkString("\n"))
   }
+
+  def getAndShowRunways(): Unit = {
+    val rawRunways = Parser.readFromFile("src/main/Ressources/runways.csv").drop(1)
+    val runways = Parser.parseToRunways(rawRunways)
+    println(runways.flatten.mkString("\n"))
+  }
+
+
 
 }

@@ -19,4 +19,12 @@ object UI {
             s"Search in Names item: $name"
         }
     }
+
+    def reportAskNumber(report: String): String= report match{
+        case "1" => "Highest"
+        case "2" => "Lowest"
+        case "3" => "Type"
+        case "4" => "Latitude"
+        case _ => "Error"
+    }
 }
