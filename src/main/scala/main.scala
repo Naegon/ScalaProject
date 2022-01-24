@@ -2,12 +2,10 @@
 
 object main {
   def main(args: Array[String]): Unit = {
-    val rawAirports = Parser.readFromFile("src/main/Ressources/airports.csv").drop(1)
-    val airports = Parser.parseToAirport(rawAirports)
+//    getAndShowAirports()
+    getAndShowCountries()
 
-    println(airports.flatten.mkString("\n"))
-
-  //UI Launch
+    //UI Launch
   /*
     println("Please select the corresponding number of what you want to do.\n1) Query\n2) Report")
     getInstruction(readLine()) match{
@@ -18,6 +16,19 @@ object main {
         case 2 => println("Reports")
         case _ => println("Syntax error")
   */
+  }
+
+  def getAndShowAirports(): Unit = {
+    val rawAirports = Parser.readFromFile("src/main/Ressources/airports.csv").drop(1)
+    val airports = Parser.parseToAirport(rawAirports)
+
+    println(airports.flatten.mkString("\n"))
+  }
+
+  def getAndShowCountries(): Unit = {
+    val rawCountries = Parser.readFromFile("src/main/Ressources/countries.csv").drop(1)
+    val countries = Parser.parseToCountry(rawCountries)
+    println(countries.mkString("\n"))
   }
 
 }
