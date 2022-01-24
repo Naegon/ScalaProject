@@ -13,6 +13,8 @@ object Extensions {
     }
 
     def noneIfBlank: Option[String] = if (str.isBlank) None else Some(str)
+    
+    def red: String = Console.RED + str + Console.RESET
   }
 
 }
