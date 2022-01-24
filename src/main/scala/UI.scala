@@ -1,5 +1,5 @@
 import scala.io.StdIn.readLine
-import utils.Extensions.red
+import utils.Extensions._
 
 object UI {
     def getInstruction(instruction: String): Int = instruction match {
@@ -57,11 +57,48 @@ object UI {
     }
 
     def Query(): Unit = {
-        println("||=======   Query   ======||")
+        println("\n\n\n||=======   Query   ======||\n")
+        println("Please enter the country code or the country name you want to search\n")
+        print("Your input: ")
+        val input = readLine()
+
+        val rawCountries = Parser.readFromFile("src/main/Ressources/countries.csv").drop(1)
+        val countries = Parser.parseToCountry(rawCountries)
+
+        val result = countries.filter(_.name.toLowerCase() contains input.toLowerCase())
+
+        result.length match {
+            case 0 => println(s"No result found for \"$input\"")
+            case 1 => show(result(0))
+            case matches => select(result, input)
+        }
+    }
+
+    def show(country: Country): Unit = {
+        println(country)
+    }
+
+    def select(matches: Array[Country], searched: String): Unit = {
+        println(s"Found ${matches.length} matches:")
+        matches.zipWithIndex.foreach((country, index) => println(s"    ${index + 1}) [${country.code.highlight(searched)}] ${country.name.highlight(searched)}"))
+
+        println("\n\n")
+        println(s"Please select one of the matched country with keys 1 to ${matches.length} or return with 0\n")
+        print("Your choice: ")
+
+        var input = readLine()
+        while (!(input forall Character.isDigit) || !(0 to matches.length contains input.toInt)) {
+            println("Invalid input ->".red + s" select one of the matched country with keys 1 to ${matches.length} or return with 0")
+            print("\nYour choice: ")
+            input = readLine()
+        }
+
     }
 
     def Report(): Unit = {
         println("||======   Report   ======||")
     }
+
+
 
 }

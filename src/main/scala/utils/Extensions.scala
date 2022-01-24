@@ -1,4 +1,5 @@
 package utils
+import java.util.regex.Pattern
 
 object Extensions {
   extension (str: String) {
@@ -15,6 +16,9 @@ object Extensions {
     def noneIfBlank: Option[String] = if (str.isBlank) None else Some(str)
     
     def red: String = Console.RED + str + Console.RESET
+    def green: String = Console.GREEN + str + Console.RESET
+
+    def highlight(input: String): String = str.replaceAll("(?i)" + Pattern.quote(input), "$0".green)
   }
 
 }
