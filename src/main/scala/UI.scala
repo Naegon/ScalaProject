@@ -74,16 +74,11 @@ object UI {
         }
     }
 
-    def show(country: Country): Unit = {
-        println(country)
-    }
-
     def select(matches: Array[Country], searched: String): Unit = {
         println(s"Found ${matches.length} matches:")
         matches.zipWithIndex.foreach((country, index) => println(s"    ${index + 1}) [${country.code.highlight(searched)}] ${country.name.highlight(searched)}"))
 
-        println("\n\n")
-        println(s"Please select one of the matched country with keys 1 to ${matches.length} or return with 0\n")
+        println(s"\nPlease select one of the matched country with keys 1 to ${matches.length} or return with 0")
         print("Your choice: ")
 
         var input = readLine()
@@ -93,12 +88,19 @@ object UI {
             input = readLine()
         }
 
+        if (input.toInt == 0) menu()
+        else show(matches(input.toInt -1))
+    }
+
+    def show(country: Country): Unit = {
+        val rawAirports = Parser.readFromFile("src/main/Ressources/airports.csv").drop(1)
+        val airports = Parser.parseToAirport(rawAirports)
+
+        print(airports.flatten.filter(_.isoCountry.contentEquals(country.code)).mkString("\n"))
     }
 
     def Report(): Unit = {
         println("||======   Report   ======||")
     }
-
-
 
 }
