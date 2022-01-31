@@ -92,6 +92,9 @@ object UI {
         else show(matches(input.toInt -1))
     }
 
+
+//    def selectReport() {}
+
     def show(country: Country): Unit = {
         val rawAirports = Parser.readFromFile("src/main/Ressources/airports.csv").drop(1)
         val airports = Parser.parseToAirport(rawAirports)
@@ -99,8 +102,27 @@ object UI {
         print(airports.flatten.filter(_.isoCountry.contentEquals(country.code)).mkString("\n"))
     }
 
-    def Report(): Unit = {
+    def Report(): String = {
         println("||======   Report   ======||")
+        println("Please select the report you want to generate\n")
+        println("1) 10 countries with the highest number of airport & with lower number of airports")
+        println("2) Type of runways per country")
+        println("3) Top 10 common runway latitude")
+        print("Your choice: ")
+        val validInput = List("1","2","3")
+
+        var input = readLine()
+        while (!(input forall Character.isDigit) && !validInput.contains(input)) {
+            println("Invalid input ->".red + " please choose one of the following: " + validInput.mkString(", "))
+            print("\nYour choice: ")
+            input = readLine()
+        }
+
+        input match {
+            case "1" => "Number 1"
+            case "2" => "Number 2"
+            case "3" => "Number 3"
+        }
     }
 
 }
