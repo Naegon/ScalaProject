@@ -102,7 +102,7 @@ object UI {
         print(airports.flatten.filter(_.isoCountry.contentEquals(country.code)).mkString("\n"))
     }
 
-    def Report(): String = {
+    def Report(): Unit = {
         println("||======   Report   ======||")
         println("Please select the report you want to generate\n")
         println("1) 10 countries with the highest number of airport & with lower number of airports")
@@ -119,9 +119,26 @@ object UI {
         }
 
         input match {
-            case "1" => "Number 1"
-            case "2" => "Number 2"
-            case "3" => "Number 3"
+            case "1" => {
+                val rawAirports = Parser.readFromFile("src/main/Ressources/airports.csv").drop(1)
+                val airports = Parser.parseToAirport(rawAirports)
+
+                val countryCount = airports
+                  .flatten
+                  .groupBy(_.isoCountry)
+                  .mapValues(_.size)
+                  .toSeq
+                  .sortWith(_._2 > _._2)
+
+
+                val highestAirportNb = countryCount.take(10)
+                val lowestAirportNb = countryCount.slice(countryCount.size - 10, countryCount.size);
+                println("Upper:\n"+highestAirportNb.mkString("\n"))
+                println("\nLower:\n"+lowestAirportNb.mkString("\n"))
+
+            }
+            case "2" => println("Number 2")
+            case "3" => println("Number 3")
         }
     }
 
