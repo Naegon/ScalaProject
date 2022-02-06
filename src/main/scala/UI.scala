@@ -119,7 +119,7 @@ object UI {
         }
 
         input match {
-            case "1" => {
+            case "1" =>
                 val rawAirports = Parser.readFromFile("src/main/Ressources/airports.csv").drop(1)
                 val airports = Parser.parseToAirport(rawAirports)
                 val rawCountries = Parser.readFromFile("src/main/Ressources/countries.csv").drop(1)
@@ -135,19 +135,16 @@ object UI {
                   .toSeq
                   .sortWith(_._2 > _._2)
 
-                val result = airportByCountry.map(_._1.contains(countries(0)(0)))
-                println(result)
 
-                val highestAirportNb = airportByCountry.take(10)
-                val lowestAirportNb = airportByCountry.slice(airportByCountry.size - 10, airportByCountry.size)
+                val countriesMap = countries.toMap
+                val result = airportByCountry.map(x => (countriesMap.getOrElse(x._1, x._2), x._2))
 
-             /*   println("Upper:\n"+highestAirportNb.mkString("\n"))
+                val highestAirportNb = result.take(10)
+                val lowestAirportNb = result.slice(result.size - 10, result.size)
+
+                println("Upper:\n"+highestAirportNb.mkString("\n"))
                 println("\nLower:\n"+lowestAirportNb.mkString("\n"))
 
-                println("\n\nCountries:"+countries.mkString("\n"))*/
-
-
-            }
 
             case "2" => println("Number 2")
             case "3" => println("Number 3")
