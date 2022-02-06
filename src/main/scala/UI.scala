@@ -142,22 +142,50 @@ object UI {
                 println("\n\nUpper:\n"+highestAirportNb.mkString("\n"))
                 println("\nLower:\n"+lowestAirportNb.mkString("\n"))
 
+// type of runways (surface) per country
+            case "2" =>
+                val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
+                val countries = Parser
+                  .parseToCountry(rawCountries)
+                  .map(x => (x._2, x._3))
+                  .toMap
 
-            case "2" => println("Number 2")
+                val rawAirports = Parser.readFromFile("src/main/Resources/airports.csv").drop(1)
+                val airports = Parser
+                  .parseToAirport(rawAirports)
+                  .flatten
+                  .map(x => (x.isoCountry,x.ident))
+                  .map(x => (x._2,countries.getOrElse(x._1, x._2)))
+                  .toMap
+
+                val rawRunways = Parser.readFromFile("src/main/Resources/runways.csv").drop(1)
+                val runways = Parser
+                  .parseToRunways(rawRunways)
+                  .flatten
+                  .map(x => (x.airport_ident, x.surface))
+                  .map(x => (airports.getOrElse(x._1, None),x._2))  // should we find a method to rm lines where it doesn't exist?
+                  .map(_ match {
+                      case (x,y) if (x != None) && (y != "None") => ((x),(y))   // if None in x or None in y  (there is surface named None in runways.csv)
+                      case (x,y) => None
+                  })
+                  // need problem to remove None, rm previous lines?
+                  .distinct
+
+
+
+                println(runways.mkString("\n"))
 
             case "3" =>
                 val rawRunways = Parser.readFromFile("src/main/Resources/runways.csv").drop(1)
-                val runways = Parser.parseToRunways(rawRunways)
-
-                val test = runways
+                val runways = Parser
+                  .parseToRunways(rawRunways)
                   .flatten
                   .groupBy(_.le_ident)
                   .mapValues(_.length)
                   .toSeq
                   .sortWith(_._2 > _._2)
 
-                println("10 most common runways latitude: \n" +
-                  test.take(10).mkString("\n"))
+                println("\n10 most common runways latitude: \n%s".format(runways.take(10).mkString("\n")))
         }
     }
 
