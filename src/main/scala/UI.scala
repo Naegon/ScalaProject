@@ -10,17 +10,15 @@ object UI {
     }
 
     def queryAskCountry(country: String): String= country match {
-        case x if (x.length <= 1) => "Not enough characters"
-        case x if (x.exists{_.isDigit})  => "Digits are not allowed" 
-        case x if (x.length == 2) => {
+        case x if x.length <= 1 => "Not enough characters"
+        case x if x.exists{_.isDigit}  => "Digits are not allowed"
+        case x if x.length == 2 =>
             val code = country.toUpperCase()
             s"Search in Code item: $code"
-        }
 
-        case _ => {
+        case _ =>
             val name = country.toLowerCase() //do same in database
             s"Search in Names item: $name"
-        }
     }
 
     def reportAskNumber(report: String): String= report match{
@@ -62,7 +60,7 @@ object UI {
         print("Your input: ")
         val input = readLine()
 
-        val rawCountries = Parser.readFromFile("src/main/Ressources/countries.csv").drop(1)
+        val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
         val countries = Parser.parseToCountry(rawCountries)
 
         val result = countries.filter(_.name.toLowerCase() contains input.toLowerCase())
@@ -96,7 +94,7 @@ object UI {
 //    def selectReport() {}
 
     def show(country: Country): Unit = {
-        val rawAirports = Parser.readFromFile("src/main/Ressources/airports.csv").drop(1)
+        val rawAirports = Parser.readFromFile("src/main/Resources/airports.csv").drop(1)
         val airports = Parser.parseToAirport(rawAirports)
 
         print(airports.flatten.filter(_.isoCountry.contentEquals(country.code)).mkString("\n"))
@@ -120,9 +118,9 @@ object UI {
 
         input match {
             case "1" =>
-                val rawAirports = Parser.readFromFile("src/main/Ressources/airports.csv").drop(1)
+                val rawAirports = Parser.readFromFile("src/main/Resources/airports.csv").drop(1)
                 val airports = Parser.parseToAirport(rawAirports)
-                val rawCountries = Parser.readFromFile("src/main/Ressources/countries.csv").drop(1)
+                val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
                 val countries = Parser
                   .parseToCountry(rawCountries)
                   .map(x => (x._2, x._3))
@@ -135,19 +133,31 @@ object UI {
                   .toSeq
                   .sortWith(_._2 > _._2)
 
-
                 val countriesMap = countries.toMap
                 val result = airportByCountry.map(x => (countriesMap.getOrElse(x._1, x._2), x._2))
 
                 val highestAirportNb = result.take(10)
                 val lowestAirportNb = result.slice(result.size - 10, result.size)
 
-                println("Upper:\n"+highestAirportNb.mkString("\n"))
+                println("\n\nUpper:\n"+highestAirportNb.mkString("\n"))
                 println("\nLower:\n"+lowestAirportNb.mkString("\n"))
 
 
             case "2" => println("Number 2")
-            case "3" => println("Number 3")
+
+            case "3" =>
+                val rawRunways = Parser.readFromFile("src/main/Resources/runways.csv").drop(1)
+                val runways = Parser.parseToRunways(rawRunways)
+
+                val test = runways
+                  .flatten
+                  .groupBy(_.le_ident)
+                  .mapValues(_.length)
+                  .toSeq
+                  .sortWith(_._2 > _._2)
+
+                println("10 most common runways latitude: \n" +
+                  test.take(10).mkString("\n"))
         }
     }
 
