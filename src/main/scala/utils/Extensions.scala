@@ -1,6 +1,7 @@
 package utils
 import java.util.regex.Pattern
 
+
 object Extensions {
   extension (str: String) {
     def isValidDouble: Boolean = str.matches("(^(-*[0-9])+\\.[0-9]+$)")
