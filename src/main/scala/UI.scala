@@ -129,7 +129,7 @@ object UI {
                 val airportByCountry = airports
                   .flatten
                   .groupBy(_.isoCountry)
-                  .mapValues(_.length)
+                  .view.mapValues(_.length)
                   .toSeq
                   .sortWith(_._2 > _._2)
 
@@ -163,11 +163,11 @@ object UI {
                   .parseToRunways(rawRunways)
                   .flatten
                   .map(x => (x.airport_ident, x.surface))
-                  .map(x => (airports.getOrElse(x._1, None),x._2))  // should we find a method to rm lines where it doesn't exist?
-                  .map(_ match {
-                      case (x,y) if (x != None) && (y != "None") => ((x),(y))   // if None in x or None in y  (there is surface named None in runways.csv)
-                      case (x,y) => None
-                  })
+                  .map(x => (airports.getOrElse(x._1, None), x._2)) // should we find a method to rm lines where it doesn't exist?
+                  .map {
+                      case (x, y) if (x != None) && (y != "None") => (x, y) // if None in x or None in y  (there is surface named None in runways.csv)
+                      case (x, y) => None
+                  }
                   // need problem to remove None, rm previous lines?
                   .distinct
 
@@ -181,7 +181,7 @@ object UI {
                   .parseToRunways(rawRunways)
                   .flatten
                   .groupBy(_.le_ident)
-                  .mapValues(_.length)
+                  .view.mapValues(_.length)
                   .toSeq
                   .sortWith(_._2 > _._2)
 
