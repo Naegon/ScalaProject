@@ -4,6 +4,7 @@ import utils.Extensions.*
 import scala.annotation.tailrec
 
 object UI {
+    @tailrec
     def menu(): Unit = {
         println("||=======   Menu   =======||")
         println("\nWelcome to our application")
@@ -17,6 +18,7 @@ object UI {
             case 1 => Query()
             case 2 => Report()
         }
+        menu()
     }
 
     def Query(): Unit = {
@@ -28,13 +30,15 @@ object UI {
         val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
         val countries = Parser.parseToCountry(rawCountries)
 
-        val result = countries.filter(_.name.toLowerCase() contains input.toLowerCase())
+        val result = countries.filter(country => (country.name.toLowerCase() contains input.toLowerCase()) || (country.code.toLowerCase() contains input.toLowerCase()))
 
         result.length match {
             case 0 => println(s"No result found for \"$input\"")
             case 1 => show(result(0))
             case matches => select(result, input)
         }
+
+        println("\n\n")
     }
 
     def select(matches: Array[Country], searched: String): Unit = {
@@ -64,7 +68,9 @@ object UI {
         val rawAirports = Parser.readFromFile("src/main/Resources/airports.csv").drop(1)
         val airports = Parser.parseToAirport(rawAirports)
 
-        print(airports.flatten.filter(_.isoCountry.contentEquals(country.code)).mkString("\n"))
+        val matchingAirports = airports.flatten.filter(_.isoCountry.contentEquals(country.code))
+        println(s"Found ${matchingAirports.length} airports in ${country.name}")
+        print(matchingAirports.mkString("\n"))
     }
 
     def Report(): Unit = {
