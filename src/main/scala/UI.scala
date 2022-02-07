@@ -1,5 +1,7 @@
 import scala.io.StdIn.readLine
-import utils.Extensions._
+import utils.Extensions.*
+
+import scala.annotation.tailrec
 
 object UI {
     def getInstruction(instruction: String): Int = instruction match {
@@ -29,9 +31,6 @@ object UI {
         case _ => "Error"
     }
 
-    val validInputQuery = List("Q", "Query", "1")
-    val validInputReport = List("R", "Report", "2")
-
     def menu(): Unit = {
         println("||=======   Menu   =======||")
         println("\nWelcome to our application")
@@ -39,18 +38,11 @@ object UI {
         println("  • Query")
         println("  • Report")
 
-        print("\nYour choice: ")
-        var input: String = readLine()
-
-        while (!validInputQuery.contains(input) && !validInputReport.contains(input)) {
-            println("Invalid input ->".red + " please choose one of the following: " + validInputQuery.concat(validInputReport).mkString(", "))
-            print("\nYour choice: ")
-            input = readLine()
-        }
+        val input = getUserInput(1 to 2, "Please choose 1 (Query) or 2 (Report)")
 
         input match {
-            case x if validInputQuery contains x => Query()
-            case x if validInputReport contains x => Report()
+            case 1 => Query()
+            case 2 => Report()
         }
     }
 
@@ -77,21 +69,23 @@ object UI {
         matches.zipWithIndex.foreach((country, index) => println(s"    ${index + 1}) [${country.code.highlight(searched)}] ${country.name.highlight(searched)}"))
 
         println(s"\nPlease select one of the matched country with keys 1 to ${matches.length} or return with 0")
-        print("Your choice: ")
 
-        var input = readLine()
-        while (!(input forall Character.isDigit) || !(0 to matches.length contains input.toInt)) {
-            println("Invalid input ->".red + s" select one of the matched country with keys 1 to ${matches.length} or return with 0")
-            print("\nYour choice: ")
-            input = readLine()
-        }
+        val input = getUserInput(0 to matches.length, s" select one of the matched country with keys 1 to ${matches.length} or return with 0")
 
-        if (input.toInt == 0) menu()
-        else show(matches(input.toInt -1))
+        if (input == 0) menu()
+        else show(matches(input - 1))
     }
 
-
-//    def selectReport() {}
+    @tailrec
+    def getUserInput(acceptedRange: Range, errorMessage: String): Int = {
+        print("\nYour choice: ")
+        val input = readLine()
+        if (input != "" && (input forall Character.isDigit) && (acceptedRange contains input.toInt)) input.toInt
+        else {
+            print("Invalid input -> ".red + errorMessage + "\n")
+            getUserInput(acceptedRange, errorMessage)
+        }
+    }
 
     def show(country: Country): Unit = {
         val rawAirports = Parser.readFromFile("src/main/Resources/airports.csv").drop(1)
@@ -106,18 +100,11 @@ object UI {
         println("1) 10 countries with the highest number of airport & with lower number of airports")
         println("2) Type of runways per country")
         println("3) Top 10 common runway latitude")
-        print("Your choice: ")
-        val validInput = List("1","2","3")
 
-        var input = readLine()
-        while (!(input forall Character.isDigit) && !validInput.contains(input)) {
-            println("Invalid input ->".red + " please choose one of the following: " + validInput.mkString(", "))
-            print("\nYour choice: ")
-            input = readLine()
-        }
+        val input = getUserInput(1 to 3, "Please choose one a number between 1 and 3")
 
         input match {
-            case "1" =>
+            case 1 =>
                 val rawAirports = Parser.readFromFile("src/main/Resources/airports.csv").drop(1)
                 val airports = Parser.parseToAirport(rawAirports)
                 val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
@@ -143,7 +130,7 @@ object UI {
                 println("\nLower:\n"+lowestAirportNb.mkString("\n"))
 
 // type of runways (surface) per country
-            case "2" =>
+            case 2 =>
                 val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
                 val countries = Parser
                   .parseToCountry(rawCountries)
@@ -171,11 +158,9 @@ object UI {
                   // need problem to remove None, rm previous lines?
                   .distinct
 
-
-
                 println(runways.mkString("\n"))
 
-            case "3" =>
+            case 3 =>
                 val rawRunways = Parser.readFromFile("src/main/Resources/runways.csv").drop(1)
                 val runways = Parser
                   .parseToRunways(rawRunways)
