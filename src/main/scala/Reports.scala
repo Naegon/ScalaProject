@@ -27,6 +27,7 @@ object Reports {
     println("\nLower:\n"+lowestAirportNb.mkString("\n"))
   }
 
+
   // Report 2: Type of runways per country
   def runwaysPerCountry(): Unit = {
     val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
@@ -49,15 +50,19 @@ object Reports {
       .flatten
       .map(x => (x.airport_ident, x.surface))
       .map(x => (airports.getOrElse(x._1, None), x._2)) // should we find a method to rm lines where it doesn't exist?
-      .map {
-        case (x, y) if (x != None) && (y != "None") => (x, y) // if None in x or None in y  (there is surface named None in runways.csv)
+      .flatMap {
+        case (x, y) if (x != None) && (y != "None") => Some(x.toString, y)
         case (x, y) => None
       }
-      // need problem to remove None, rm previous lines?
       .distinct
+      .sorted
 
-    println(runways.mkString("\n"))
+    val test /*: Map[String, String]*/ = runways
+      .groupMapReduce(_(0).toString)(_(1).toString)(_ + ", " + _)
+
+    println(test.mkString("\n"))
   }
+
 
   // Report 3: Top latitudes
   def topLatitude(): Unit = {
