@@ -1,4 +1,4 @@
-import utils.Extensions._
+import Extensions.noneIfBlank
 
 final case class Country (
                          id: String,

@@ -1,10 +1,8 @@
-package utils
-
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 
 class ExtensionsSpec extends AnyFlatSpec with Matchers:
-  import Extensions._
+  import Extensions.*
 
   "String" should "be a valid doubles" in {
     "12.00".isValidDouble must be(true)

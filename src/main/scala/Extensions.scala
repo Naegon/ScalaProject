@@ -1,6 +1,4 @@
-package utils
 import java.util.regex.Pattern
-
 
 object Extensions {
   extension (str: String) {

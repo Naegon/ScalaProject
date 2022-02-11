@@ -1,4 +1,21 @@
+import Utils.getUserInput
+
 object Reports {
+  def Report(): Unit = {
+    println("||======   Report   ======||")
+    println("Please select the report you want to generate\n")
+    println("1) 10 countries with the highest number of airport & with lower number of airports")
+    println("2) Type of runways per country")
+    println("3) Top 10 common runway latitude")
+
+    val input = getUserInput(1 to 3, "Please choose one a number between 1 and 3")
+
+    input match {
+      case 1 => topTen()
+      case 2 => runwaysPerCountry()
+      case 3 => topLatitude()
+    }
+  }
   
   // Report 1: 1O most & 10 less
   def topTen(): Unit = {
@@ -26,8 +43,7 @@ object Reports {
     println("\n\nUpper:\n"+highestAirportNb.mkString("\n"))
     println("\nLower:\n"+lowestAirportNb.mkString("\n"))
   }
-
-
+  
   // Report 2: Type of runways per country
   def runwaysPerCountry(): Unit = {
     val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
@@ -63,7 +79,6 @@ object Reports {
     println(test.mkString("\n"))
   }
 
-
   // Report 3: Top latitudes
   def topLatitude(): Unit = {
     val rawRunways = Parser.readFromFile("src/main/Resources/runways.csv").drop(1)
@@ -77,4 +92,5 @@ object Reports {
 
     println("\n10 most common runways latitude: \n%s".format(runways.take(10).mkString("\n")))
   }
+  
 }

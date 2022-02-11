@@ -1,4 +1,4 @@
-import utils.Extensions._
+import Extensions._
 
 final case class Airport(
                    id: String,

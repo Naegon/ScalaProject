@@ -1,4 +1,4 @@
-import utils.Extensions._
+import Extensions._
 
 final case class Runways(
                    id: Int,
@@ -47,12 +47,6 @@ object Runways {
         || !(values(6) forall Character.isDigit)
         || !(values(7) forall Character.isDigit)
         || values(8).equals("")
-/*        || !(values(11) forall Character.isDigit)
-        || !(values(12) forall Character.isDigit)
-        || !(values(13) forall Character.isDigit)
-        || !(values(17) forall Character.isDigit)
-        || !(values(18) forall Character.isDigit)
-        || !(values(19) forall Character.isDigit)*/
     ) None
     
     else Some(Runways(
