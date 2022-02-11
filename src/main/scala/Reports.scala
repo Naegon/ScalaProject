@@ -1,4 +1,5 @@
 import Utils.getUserInput
+import main.SYSTEM
 
 object Reports {
   def Report(): Unit = {
@@ -19,15 +20,11 @@ object Reports {
   
   // Report 1: 1O most & 10 less
   def topTen(): Unit = {
-    val rawAirports = Parser.readFromFile("src/main/Resources/airports.csv").drop(1)
-    val airports = Parser.parseToAirport(rawAirports)
-    val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
-    val countries = Parser
-      .parseToCountry(rawCountries)
+    val countries = SYSTEM.countries
       .map(x => (x._2, x._3))
       .toSeq
 
-    val airportByCountry = airports
+    val airportByCountry = SYSTEM.airports
       .flatten
       .groupBy(_.isoCountry)
       .view.mapValues(_.length)
@@ -43,7 +40,7 @@ object Reports {
     println("\n\nUpper:\n"+highestAirportNb.mkString("\n"))
     println("\nLower:\n"+lowestAirportNb.mkString("\n"))
   }
-  
+
   // Report 2: Type of runways per country
   def runwaysPerCountry(): Unit = {
     val rawCountries = Parser.readFromFile("src/main/Resources/countries.csv").drop(1)
@@ -81,9 +78,7 @@ object Reports {
 
   // Report 3: Top latitudes
   def topLatitude(): Unit = {
-    val rawRunways = Parser.readFromFile("src/main/Resources/runways.csv").drop(1)
-    val runways = Parser
-      .parseToRunways(rawRunways)
+    val runways = SYSTEM.runways
       .flatten
       .groupBy(_.le_ident)
       .view.mapValues(_.length)
@@ -92,5 +87,5 @@ object Reports {
 
     println("\n10 most common runways latitude: \n%s".format(runways.take(10).mkString("\n")))
   }
-  
+
 }

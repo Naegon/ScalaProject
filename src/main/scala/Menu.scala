@@ -1,10 +1,10 @@
 import scala.io.StdIn.readLine
 import Extensions.*
 
-import Utils.*
 import scala.annotation.tailrec
-import Reports.*
+import Reports._
 import Query._
+import Utils._
 
 object Menu {
     @tailrec

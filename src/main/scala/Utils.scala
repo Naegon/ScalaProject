@@ -4,6 +4,8 @@ import scala.io.StdIn.readLine
 import Menu.menu
 
 object Utils {
+  val FILEPATH = "src/main/Resources/"
+  
   @tailrec
   def getUserInput(acceptedRange: Range, errorMessage: String): Int = {
     print("\nYour choice: ")
