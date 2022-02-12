@@ -20,40 +20,45 @@ object Reports {
   
   // Report 1: 1O most & 10 less
   def topTen(): Unit = {
-    val countries = SYSTEM.countries
+    val countries = SYSTEM
+      .countries
       .map(x => (x._2, x._3))
       .toMap
 
-    val airportByCountry = SYSTEM.airports
+    val airportByCountry = SYSTEM
+      .airports
       .flatten
       .groupBy(_.isoCountry)
       .view.mapValues(_.length)
       .toSeq
       .sortWith(_._2 > _._2)
 
-    val result = airportByCountry.map(x => (countries.getOrElse(x._1, x._2), x._2))
+    val result = airportByCountry.map(x => (countries.getOrElse(x._1, x._1), x._2))
 
     val highestAirportNb = result.take(10)
     val lowestAirportNb = result.slice(result.size - 10, result.size)
 
-    println("\n\nUpper:\n"+highestAirportNb.mkString("\n"))
-    println("\nLower:\n"+lowestAirportNb.mkString("\n"))
+    println("\n\nUpper:\n"+highestAirportNb.toMap.mkString("\n"))
+    println("\nLower:\n"+lowestAirportNb.toMap.mkString("\n"))
   }
 
   // Report 2: Type of runways per country
   def runwaysPerCountry(): Unit = {
-    val countries = SYSTEM.countries
+    val countries = SYSTEM
+      .countries
       .map(x => (x.code, x.name))
       .toMap
 
-    val airports = SYSTEM.airports
+    val airports = SYSTEM
+      .airports
       .flatten
       .map(x => (x.isoCountry,x.ident))
       .map(x => (x._2,countries.getOrElse(x._1, None)))
       .toMap
 
 
-    val runways = SYSTEM.runways
+    val runways = SYSTEM
+      .runways
       .flatten
       .map(x => (x.airport_ident, x.surface))
 
@@ -151,22 +156,34 @@ object Reports {
 
     println(test.mkString("\n"))
 
- /*   val tmp = result.map(_._2)
+    val tmp = result
+      .map(_._2)
       .distinct
       .sorted
 
-    println("\n\n"+tmp.mkString(", ")+"\n"+tmp.length)*/
+    //println("\n\n"+tmp.mkString(", ")+"\n"+tmp.length)
   }
 
   // Report 3: Top latitudes
   def topLatitude(): Unit = {
-    val runways = SYSTEM.runways
+    val runways = SYSTEM
+      .runways
       .flatten
       .groupBy(_.le_ident)
       .view.mapValues(_.length)
       .toSeq
       .sortWith(_._2 > _._2)
 
-    println("\n10 most common runways latitude: \n%s".format(runways.take(10).mkString("\n")))
+    println(("\n10 most common runways latitude:\n" +
+      "\tLatitude: \tOccurrences\n" +
+      "%s").format(runways.take(10).mkString("\n")
+      .replace(",", "\t:\t   "))
+      .replace("(","\t   ")
+      .replace(")",""))
+
   }
+
+
+
+
 }
