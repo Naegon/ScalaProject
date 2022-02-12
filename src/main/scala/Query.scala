@@ -13,7 +13,10 @@ object Query {
     print("Your input: ")
     val input = readLine()
 
-    val result = SYSTEM.countries.filter(country => (country.name.toLowerCase() contains input.toLowerCase()) || (country.code.toLowerCase() contains input.toLowerCase()))
+    val result = SYSTEM
+      .countries
+      .filter(country => (country.name.toLowerCase() contains input.toLowerCase())
+        || (country.code.toLowerCase() contains input.toLowerCase()))
 
     result.length match {
       case 0 => println(s"No result found for \"$input\"")
@@ -26,11 +29,15 @@ object Query {
 
   def select(matches: Array[Country], searched: String): Unit = {
     println(s"Found ${matches.length} matches:")
-    matches.zipWithIndex.foreach((country, index) => println(s"    ${index + 1}) [${country.code.highlight(searched)}] ${country.name.highlight(searched)}"))
+    matches
+      .zipWithIndex
+      .foreach((country, index)
+      => println(s"    ${index + 1}) [${country.code.highlight(searched)}] ${country.name.highlight(searched)}"))
 
     println(s"\nPlease select one of the matched country with keys 1 to ${matches.length} or return with 0")
 
-    val input = getUserInput(0 to matches.length, s" select one of the matched country with keys 1 to ${matches.length} or return with 0")
+    val input = getUserInput(0 to matches.length,
+      s" select one of the matched country with keys 1 to ${matches.length} or return with 0")
 
     if (input == 0) menu()
     else show(matches(input - 1))
@@ -41,5 +48,4 @@ object Query {
     println(s"Found ${matchingAirports.length} airports in ${country.name}")
     print(matchingAirports.mkString("\n"))
   }
-
 }
