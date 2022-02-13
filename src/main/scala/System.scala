@@ -8,19 +8,19 @@ object System {
     println(s"Reading system from ${filePath.blue} folder")
 
     val rawAirports = Parser.readFromFile(s"${filePath}airports.csv").drop(1)
-    val airports = Parser.parseToAirport(rawAirports)
+    val airports = Parser.parse(rawAirports, Airport)
 
     printStat(airports, "airports")
 
     val rawRunways = Parser.readFromFile(s"${filePath}runways.csv").drop(1)
-    val runways = Parser.parseToRunways(rawRunways)
+    val runways = Parser.parse(rawRunways, Runways)
 
     printStat(runways, "runways")
 
     val rawCountries = Parser.readFromFile(s"${filePath}countries.csv").drop(1)
-    val countries = Parser.parseToCountry(rawCountries)
+    val countries = Parser.parse(rawCountries, Country)
 
-    printStat(countries.map(Option[Country]), "countries")
+    printStat(countries, "countries")
 
     println("\n\n")
 
