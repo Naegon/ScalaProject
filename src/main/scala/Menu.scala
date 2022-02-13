@@ -1,5 +1,5 @@
 import scala.io.StdIn.readLine
-import Extensions.*
+import Extensions._
 
 import scala.annotation.tailrec
 import Reports._
@@ -9,7 +9,7 @@ import Utils._
 object Menu {
     @tailrec
     def menu(): Unit = {
-        println("||=======   Menu   =======||\n")
+        println("||=======   Menu   =======||\n".bold)
         println("Welcome to our application")
         println("Please choose one of the following option:")
         println("  1) Query")

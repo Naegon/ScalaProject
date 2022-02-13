@@ -6,7 +6,7 @@ import scala.util.matching.Regex
 
 object Reports {
   def Report(): Unit = {
-    println("||======   Report   ======||")
+    println("||======   Report   ======||".bold)
     println("Please select the report you want to generate\n")
     println("  1) 10 countries with the highest number of airport & with lower number of airports")
     println("  2) Type of runways per country")

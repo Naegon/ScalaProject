@@ -1,14 +1,14 @@
 import Utils.getUserInput
 import Menu.menu
 import main.SYSTEM
-import Extensions.*
+import Extensions._
 
 import scala.io.StdIn.readLine
 
 object Query {
 
   def Query(): Unit = {
-    println("\n\n\n||=======   Query   ======||\n")
+    println("\n\n\n||=======   Query   ======||\n".bold)
     println("Please enter the country code or the country name you want to search\n")
     print("Your input: ")
     val input = readLine()
