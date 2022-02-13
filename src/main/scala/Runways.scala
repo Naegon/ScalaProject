@@ -38,14 +38,14 @@ object Runways {
     val values = input.replaceAll("[\"]", "")
       .split(",", -1)
 
-    if (!(values(0) forall Character.isDigit)
-        || !(values(1) forall Character.isDigit)
+    if (!(values(0) forall Character.isDigit) || values(0).isEmpty
+        || !(values(1) forall Character.isDigit) || values(0).isEmpty
         || values(2).equals("")
         || !(values(3) forall Character.isDigit) || values(3).isEmpty
         || !(values(4) forall Character.isDigit) || values(4).isEmpty
         || values(5).equals("")
-        || !(values(6) forall Character.isDigit)
-        || !(values(7) forall Character.isDigit)
+        || !(values(6) forall Character.isDigit) || values(3).isEmpty
+        || !(values(7) forall Character.isDigit) || values(3).isEmpty
         || values(8).equals("")
     ) None
     
