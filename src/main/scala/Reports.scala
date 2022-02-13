@@ -40,8 +40,30 @@ object Reports {
     val highestAirportNb = result.take(10)
     val lowestAirportNb = result.slice(result.size - 10, result.size)
 
-    println("\n\nUpper:\n"+highestAirportNb.mkString("\n").removeParenthesis())
-    println("\nLower:\n"+lowestAirportNb.mkString("\n").removeParenthesis())
+    val countryHighLen = highestAirportNb.map(_._1.length).max
+    val countryLowLen = lowestAirportNb.map(_._1.length).max
+
+    println("\n10 most common runways latitude:\n" +
+      s"| ----------- | ${"-"*countryHighLen} |\n" +
+      s"| Occurrences | ${"Countries".padTo(countryHighLen, ' ')} |\n" +
+      s"| ----------- | ${"-"*countryHighLen} |\n" +
+      highestAirportNb
+        .map((x, y) => ("| " + y.toString.padTo(11, ' ')  + " | ", x.toString.padTo(countryHighLen, ' ') + " |"))
+        .mkString("\n")
+        .removeParenthesis()
+        .replaceAll(",", "")
+    )
+
+    println("\n10 most common runways latitude:\n" +
+      s"| ----------- | ${"-"*countryLowLen} |\n" +
+      s"| Occurrences | ${"Countries".padTo(countryLowLen, ' ')} |\n" +
+      s"| ----------- | ${"-"*countryLowLen} |\n" +
+      lowestAirportNb
+        .map((x, y) => ("| " + y.toString.padTo(11, ' ')  + " | ", x.toString.padTo(countryLowLen, ' ') + " |"))
+        .mkString("\n")
+        .removeParenthesis()
+        .replaceAll(",", "")
+    )
   }
 
   // Report 2: Type of runways per country
