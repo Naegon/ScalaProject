@@ -44,7 +44,7 @@ object Query {
   }
   
   def show(country: Country): Unit = {
-    val matchingAirports = SYSTEM.airports.flatten.filter(_.isoCountry.contentEquals(country.code))
+    val matchingAirports = SYSTEM.airports.filter(_.isoCountry.contentEquals(country.code))
     println(s"Found ${matchingAirports.length} airports in ${country.name}")
     print(matchingAirports.mkString("\n"))
   }

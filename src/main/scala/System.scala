@@ -1,7 +1,7 @@
 import scala.reflect.ClassTag
 import Extensions.{green, red, blue, yellow}
 
-final case class System(airports: Array[Option[Airport]], runways: Array[Option[Runways]], countries: Array[Country])
+final case class System(airports: Array[Airport], runways: Array[Runways], countries: Array[Country])
 
 object System {
   def apply(filePath: String): System = {
@@ -24,7 +24,7 @@ object System {
 
     println("\n\n")
 
-    System(airports, runways, countries)
+    System(airports.flatten, runways.flatten, countries.flatten)
   }
 
   def printStat[T:ClassTag](result: Array[Option[T]], value: String): Unit = {

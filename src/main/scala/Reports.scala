@@ -30,7 +30,6 @@ object Reports {
 
     val airportByCountry = SYSTEM
       .airports
-      .flatten
       .groupBy(_.isoCountry)
       .view.mapValues(_.length)
       .toSeq
@@ -54,17 +53,13 @@ object Reports {
 
     val airports = SYSTEM
       .airports
-      .flatten
       .map(x => (x.isoCountry,x.ident))
       .map(x => (x._2,countries.getOrElse(x._1, None)))
       .toMap
 
-
     val runways = SYSTEM
       .runways
-      .flatten
       .map(x => (x.airport_ident, x.surface))
-
 
     val result = runways
       .map(x => (airports.getOrElse(x._1, None), x._2)) // should we find a method to rm lines where it doesn't exist?
@@ -89,7 +84,6 @@ object Reports {
   def topLatitude(): Unit = {
     val runways = SYSTEM
       .runways
-      .flatten
       .groupBy(_.le_ident)
       .view.mapValues(_.length)
       .toSeq
