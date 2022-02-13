@@ -14,7 +14,7 @@ object Extensions {
 
     def noneIfBlank: Option[String] = if (str.isBlank) None else Some(str)
     
-    def removeParenthesis: String = str.replaceAll("[()]", "")
+    def removeParenthesis(): String = str.replaceAll("[()]", "")
     
     def red: String = Console.RED + str + Console.RESET
     def green: String = Console.GREEN + str + Console.RESET

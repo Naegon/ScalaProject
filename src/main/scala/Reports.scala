@@ -40,8 +40,8 @@ object Reports {
     val highestAirportNb = result.take(10)
     val lowestAirportNb = result.slice(result.size - 10, result.size)
 
-    println("\n\nUpper:\n"+highestAirportNb.mkString("\n").removeParenthesis)
-    println("\nLower:\n"+lowestAirportNb.mkString("\n").removeParenthesis)
+    println("\n\nUpper:\n"+highestAirportNb.mkString("\n").removeParenthesis())
+    println("\nLower:\n"+lowestAirportNb.mkString("\n").removeParenthesis())
   }
 
   // Report 2: Type of runways per country
@@ -76,7 +76,7 @@ object Reports {
       .groupMapReduce(_(0).toString.blue.bold)(_(1).toString)(_ + ", " + _)
       .toSeq.sortWith(_._1 < _._1)
 
-    println(test.mkString("\n").replaceAll(",(?! )", " -> ").removeParenthesis)
+    println(test.mkString("\n").replaceAll(",(?! )", " -> ").removeParenthesis())
   }
 
   // Report 3: Top latitudes
@@ -95,7 +95,7 @@ object Reports {
       topRunways
         .map((x, y) => ("| " + x.toString.padTo(12, ' ')  + " | ", y.toString.padTo(12, ' ') + " |"))
         .mkString("\n")
-        .removeParenthesis
+        .removeParenthesis()
         .replaceAll(",", "")
     )
   }
