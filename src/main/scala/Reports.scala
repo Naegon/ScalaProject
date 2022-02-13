@@ -1,5 +1,5 @@
 import Utils._
-import Extensions.{blue, red, bold}
+import Extensions._
 import main.SYSTEM
 
 import scala.util.matching.Regex
@@ -8,9 +8,9 @@ object Reports {
   def Report(): Unit = {
     println("||======   Report   ======||")
     println("Please select the report you want to generate\n")
-    println("1) 10 countries with the highest number of airport & with lower number of airports")
-    println("2) Type of runways per country")
-    println("3) Top 10 common runway latitude")
+    println("  1) 10 countries with the highest number of airport & with lower number of airports")
+    println("  2) Type of runways per country")
+    println("  3) Top 10 common runway latitude")
 
     val input = getUserInput(1 to 3, "Please choose one a number between 1 and 3")
 
@@ -40,8 +40,8 @@ object Reports {
     val highestAirportNb = result.take(10)
     val lowestAirportNb = result.slice(result.size - 10, result.size)
 
-    println("\n\nUpper:\n"+highestAirportNb.toMap.mkString("\n"))
-    println("\nLower:\n"+lowestAirportNb.toMap.mkString("\n"))
+    println("\n\nUpper:\n"+highestAirportNb.mkString("\n").removeParenthesis)
+    println("\nLower:\n"+lowestAirportNb.mkString("\n").removeParenthesis)
   }
 
   // Report 2: Type of runways per country
@@ -76,8 +76,7 @@ object Reports {
       .groupMapReduce(_(0).toString.blue.bold)(_(1).toString)(_ + ", " + _)
       .toSeq.sortWith(_._1 < _._1)
 
-    println(test.mkString("\n").replaceAll(",(?! )", " -> ").replaceAll("[()]", ""))
-
+    println(test.mkString("\n").replaceAll(",(?! )", " -> ").removeParenthesis)
   }
 
   // Report 3: Top latitudes
