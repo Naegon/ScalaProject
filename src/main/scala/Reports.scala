@@ -1,6 +1,8 @@
-import Utils.getUserInput
-import Extensions.{ bold, blue }
+import Utils._
+import Extensions.{blue, red, bold}
 import main.SYSTEM
+
+import scala.util.matching.Regex
 
 object Reports {
   def Report(): Unit = {
@@ -71,84 +73,7 @@ object Reports {
         case (x, y) => None
       }
       .distinct
-      .map {
-        case (x,y) if "(?i).*asp.*".r.matches(y) => (x,"Asphalt")
-        case (x,y) if "(?i).*grav.*".r.matches(y)
-          || "(?i).*grv.*".r.matches(y)
-          || "(?i).*gvl.*".r.matches(y)
-        => (x,"Gravel")
-        case (x,y) if "(?i).*grs.*".r.matches(y)
-          || "(?i)^gras.*".r.matches(y)
-          || "(?i)^turf.*".r.matches(y)
-          || "(?i)sod".r.matches(y)
-        => (x,"Grass")
-        case (x,y) if "(?i)^wat.*".r.matches(y) => (x,"Water")
-        case (x,y) if "(?i).*con.*".r.matches(y)
-          || "(?i).*concrete.*".r.matches(y)
-        => (x,"Concrete")
-        case (x,y) if "(?i)^unk.*".r.matches(y)
-          || "(?i)^u$".r.matches(y)
-        => (x,"Unknown")
-        case (x,y) if "(?i)^unpaved.*".r.matches(y) => (x,"Unpaved")
-        case (x,y) if "(?i)^paved".r.matches(y)
-          || "(?i)^pav.*".r.matches(y)
-        => (x,"Paved")
-        case (x,y) if "(?i).*silt.*".r.matches(y) => (x,"Silt")
-        case (x,y) if "(?i).*cla.*".r.matches(y) => (x,"Clay")
-        case (x,y) if "(?i).*ice.*".r.matches(y) => (x,"Ice")
-        case (x,y) if "(?i).*san.*".r.matches(y) => (x,"Sand")
-        case (x,y) if "(?i).*dirt.*".r.matches(y) => (x,"Dirt")
-        case (x,y) if "(?i)gre".r.matches(y)
-          || "(?i).*earth.*".r.matches(y)
-          || "(?i).*graded.*".r.matches(y)
-          || "(?i).*soil.*".r.matches(y)
-        => (x,"Graded soil")
-        case (x,y) if "(?i)lat".r.matches(y) => (x,"Laterite")
-        case (x,y) if "(?i)sno".r.matches(y) => (x,"Snow")
-        case (x,y) if "(?i).*coral.*".r.matches(y)
-          || "(?i)^cor.*".r.matches(y)
-        => (x,"Coral")
-        case (x,y) if "(?i).*bit.*".r.matches(y) => (x,"Bitume")
-        case (x,y) if "(?i)pem".r.matches(y)
-          || "(?i)mac".r.matches(y)
-        => (x,"Macadam")
-        case (x,y) if "(?i)^bri.*".r.matches(y) => (x,"Brick")
-        case (x,y) if "(?i).*ground.*".r.matches(y) => (x,"Ground")
-        case (x,y) if "(?i).*com.*".r.matches(y)
-          || "(?i)cop".r.matches(y)
-        => (x,"Composite")
-        case (x,y) if "(?i).*snow.*".r.matches(y) => (x,"Snow")
-        case (x,y) if "(?i).*sand.*".r.matches(y) => (x,"sand")
-        case (x,y) if "(?i).*rock.*".r.matches(y) => (x,"Rock")
-        case (x,y) if "(?i).*wood.*".r.matches(y) => (x,"Wood")
-        case (x,y) if "(?i)per".r.matches(y)
-          || "(?i)pam".r.matches(y)
-        => (x,"Permanent")
-        case (x,y) if "(?i)met.*".r.matches(y) ||
-          "(?i)mtal".r.matches(y)
-        => (x,"Metal")
-        case (x,y) if "(?i).*tar.*".r.matches(y) => (x,"Tarmac")
-        case (x,y) if "(?i)treated.*".r.matches(y) ||
-          "(?i)trtd.*".r.matches(y)
-        => (x,"Metal")
-        case (x,y) if "(?i).*steel.*".r.matches(y) => (x,"Metal")
-        case (x,y) if "(?i)oil.*".r.matches(y) => (x,"Oil")
-        case (x,y) if "(?i)alum.*".r.matches(y) => (x,"Aluminium")
-        case (x,y) if "(?i)volcanic.*".r.matches(y) => (x,"Volcanic ash")
-        case (x,y) if "(?i)roof.*".r.matches(y) => (x,"Rooftop")
-        case (x,y) if "(?i)caliche".r.matches(y) => (x,"Caliche")
-        case (x,y) if "(?i)mats.*".r.matches(y) => (x,"Mats")
-        case (x,y) if "(?i)sealed".r.matches(y) => (x,"Sealed")
-        case (x,y) if "(?i)unsealed".r.matches(y) => (x,"Unsealed")
-        case (x,y) if "(?i)neoprene".r.matches(y) => (x,"Neoprene")
-        case (x,y) if "(?i)grain".r.matches(y) => (x,"Grain")
-        case (x,y) if "(?i)deck".r.matches(y) => (x,"Deck")
-        case (x,y) if "(?i).*loam.*".r.matches(y) => (x,"Loam")
-        case (x,y) if "(?i).*mud.*".r.matches(y) => (x,"Mud")
-        case (x,y) if "(?i).*lime.*".r.matches(y) => (x,"Limestone")
-        case (x,y) if "(?i).*pad.*".r.matches(y) => (x,"Pad")
-        case (x,y) => (x,y)
-      }
+      .map((x, y) => (x, replaceCat(y)))
       .distinct
       .sorted
 
@@ -158,12 +83,6 @@ object Reports {
 
     println(test.mkString("\n").replaceAll(",(?! )", " -> ").replaceAll("[()]", ""))
 
-    val tmp = result
-      .map(_._2)
-      .distinct
-      .sorted
-
-//    println("\n\n"+tmp.mkString(", ")+"\n"+tmp.length)
   }
 
   // Report 3: Top latitudes
@@ -182,10 +101,56 @@ object Reports {
       .replace(",", "\t:\t   "))
       .replace("(","\t   ")
       .replace(")",""))
-
   }
 
-
-
+  def replaceCat(string: String): String = {
+    string match {
+      case asphalt(_*) => "Asphalt"
+      case gravel(_*) => "Gravel"
+      case grass(_*) => "Grass"
+      case water(_*) => "Water"
+      case concrete(_*) => "Concrete"
+      case unknown(_*) => "Unknown"
+      case unpaved(_*) => "Unpaved"
+      case paved(_*) => "Paved"
+      case silt(_*) => "Silt"
+      case clay(_*) => "Clay"
+      case ice(_*) => "Ice"
+      case sand(_*) => "Sand"
+      case dirt(_*) => "Dirt"
+      case graded(_*) => "Graded soil"
+      case laterite(_*) => "Laterite"
+      case snow(_*) => "Snow"
+      case coral(_*) => "Coral"
+      case bitume(_*) => "Bitume"
+      case macadam(_*) => "Macadam"
+      case brick(_*) => "Brick"
+      case ground(_*) => "Ground"
+      case composite(_*) => "Composite"
+      case rock(_*) => "Rock"
+      case wood(_*) => "Wood"
+      case permanent(_*) => "Permanent"
+      case metal(_*) => "Metal"
+      case tarmac(_*) => "Tarmac"
+      case treated(_*) => "Treated"
+      case steel(_*) => "Metal"
+      case oil(_*) => "Oil"
+      case aluminium(_*) => "Aluminium"
+      case volcanic(_*) => "Volcanic ash"
+      case rooftop(_*) => "Rooftop"
+      case caliche(_*) => "Caliche"
+      case mats(_*) => "Mats"
+      case seal(_*) => "Sealed"
+      case unseal(_*) => "Unsealed"
+      case neoprene(_*) => "Neoprene"
+      case grain(_*) => "Grain"
+      case deck(_*) => "Deck"
+      case loam(_*) => "Loam"
+      case mud(_*) => "Mud"
+      case stone(_*) => "Stone"
+      case pad(_*) => "Pad"
+      case _ => string.red
+    }
+  }
 
 }
