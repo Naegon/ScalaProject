@@ -12,6 +12,5 @@ object Parser {
     data
   }
 
-  def parseToAirport(rawData: Array[String]): Array[Option[Airport]] = rawData.map(Airport(_))
-
+  def parse[T](rawData: Array[String], func: String => Option[T]): Array[Option[T]] = rawData.map(func(_))
 }

@@ -2,3 +2,6 @@
 .idea
 target
 project
+.metals
+.vscode
+.project

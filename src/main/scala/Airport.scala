@@ -1,3 +1,5 @@
+import Extensions._
+
 final case class Airport(
                    id: String,
                    ident: String,
@@ -5,32 +7,36 @@ final case class Airport(
                    name: String,
                    latitude_deg: Double,
                    longitude_deg: Double,
-                   elevation_ft: Int,
+                   elevation_ft: Option[Int],
                    continent: String,
                    isoCountry: String,
                    isoRegion: String,
                    municipality: String,
-                   scheduledService: Boolean,
-                   gpsCode: String,
-                   iataCode: String,
-                   localCode: String,
-                   homeLink: String,
-                   wikipediaLink: String,
-                   keywords: String
-                   )
+                   scheduledService: Option[Boolean],
+                   gpsCode: Option[String],
+                   iataCode: Option[String],
+                   localCode: Option[String],
+                   homeLink: Option[String],
+                   wikipediaLink: Option[String],
+                   keywords: Option[String]
+                   ) {
+
+  override def toString: String = {
+    s"\n$id - Airport: $name [$ident]" +
+      s"\n    | Type: $airportType" +
+      s"\n    | Coordinate: $latitude_deg • $longitude_deg"
+        .appendedAll(if(elevation_ft.isDefined) s" • ${elevation_ft.get}ft." else "") +
+      s"\n    | Localisation: $continent - $municipality ($isoCountry, $isoRegion)"
+        .appendedAll(if (wikipediaLink.isDefined) s"\n    | Wikipedia: ${wikipediaLink.get}" else "")
+  }
+}
 
 object Airport {
   def apply(input: String): Option[Airport] = {
     val values = input.replaceAll("[\"]", "")
       .split(",", -1)
 
-    if (!values.isValidDouble)
-        || !(values(5) forall Character.isDigit)
-        || !(values(6) forall Character.isDigit)
-        || values(4).equals("")
-        || values(5).equals("")
-        || values(6).equals("")
-    ) None
+    if (!values(4).isValidDouble || !values(5).isValidDouble) None
     else Some(Airport(
       values(0),
       values(1),
@@ -38,18 +44,18 @@ object Airport {
       values(3),
       values(4).toDouble,
       values(5).toDouble,
-      values(6).toInt,
+      values(6).toIntOption,
       values(7),
       values(8),
       values(9),
       values(10),
-      values(11) == "yes",
-      values(12),
-      values(13),
-      values(14),
-      values(15),
-      values(16),
-      values(17)
+      values(11).toOptionalBool,
+      values(12).noneIfBlank,
+      values(13).noneIfBlank,
+      values(14).noneIfBlank,
+      values(15).noneIfBlank,
+      values(16).noneIfBlank,
+      values(17).noneIfBlank
     ))
   }
 
