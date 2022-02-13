@@ -7,7 +7,7 @@ object Extensions {
     def toOptionalBool: Option[Boolean] = {
       str match {
         case "yes" => Some(true)
-        case "non" => Some(false)
+        case "no" => Some(false)
         case _ => None
       }
     }
