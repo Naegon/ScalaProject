@@ -18,6 +18,7 @@ object Extensions {
     def green: String = Console.GREEN + str + Console.RESET
     def blue: String = Console.BLUE + str + Console.RESET
     def yellow: String = Console.YELLOW + str + Console.RESET
+    def bold: String = Console.BOLD + str + Console.RESET
 
     def highlight(input: String): String = str.replaceAll("(?i)" + Pattern.quote(input), "$0".green)
   }

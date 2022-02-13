@@ -1,4 +1,5 @@
 import Utils.getUserInput
+import Extensions.{ bold, blue }
 import main.SYSTEM
 
 object Reports {
@@ -152,16 +153,17 @@ object Reports {
       .sorted
 
     val test /*: Map[String, String]*/ = result
-      .groupMapReduce(_(0).toString)(_(1).toString)(_ + ", " + _)
+      .groupMapReduce(_(0).toString.blue.bold)(_(1).toString)(_ + ", " + _)
+      .toSeq.sortWith(_._1 < _._1)
 
-    println(test.mkString("\n"))
+    println(test.mkString("\n").replaceAll(",(?! )", " -> ").replaceAll("[()]", ""))
 
     val tmp = result
       .map(_._2)
       .distinct
       .sorted
 
-    //println("\n\n"+tmp.mkString(", ")+"\n"+tmp.length)
+//    println("\n\n"+tmp.mkString(", ")+"\n"+tmp.length)
   }
 
   // Report 3: Top latitudes
