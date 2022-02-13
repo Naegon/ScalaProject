@@ -81,19 +81,23 @@ object Reports {
 
   // Report 3: Top latitudes
   def topLatitude(): Unit = {
-    val runways = SYSTEM
+    val topRunways = SYSTEM
       .runways
       .groupBy(_.le_ident)
       .view.mapValues(_.length)
       .toSeq
       .sortWith(_._2 > _._2)
+      .take(10)
 
-    println(("\n10 most common runways latitude:\n" +
-      "\tLatitude: \tOccurrences\n" +
-      "%s").format(runways.take(10).mkString("\n")
-      .replace(",", "\t:\t   "))
-      .replace("(","\t   ")
-      .replace(")",""))
+    println("\n10 most common runways latitude:\n" +
+      "| Latitude     | Occurrences  |\n" +
+      "| ------------ | ------------ |\n" +
+      topRunways
+        .map((x, y) => ("| " + x.toString.padTo(12, ' ')  + " | ", y.toString.padTo(12, ' ') + " |"))
+        .mkString("\n")
+        .removeParenthesis
+        .replaceAll(",", "")
+    )
   }
 
   def replaceCat(string: String): String = {
